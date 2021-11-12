@@ -76,7 +76,6 @@ class Balance:
                 server.tick_counter = server.tick_counter + 1
         else:
             tick_server_info = '0'
-        print('servers=', tick_server_info)
         return tick_server_info
 
     def get_best_server(self):
