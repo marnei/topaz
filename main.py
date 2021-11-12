@@ -2,6 +2,7 @@
 """
 
 import sys
+import load_balance
 import servers
 
 # Press the green button in the gutter to run the script.
@@ -30,11 +31,22 @@ if __name__ == '__main__':
     except Exception as erro:
         sys.exit('ERROR:{}'.format(erro))
 
-    users_to_add = file_input.readlines()
-    for num_users in users_to_add:
-        try:
-            for user in range(int(num_users)):
-                print('user=', user)
-        except Exception as erro:
-            print('ERROR:{}'.format(erro))
+    load_balance = load_balance.Balance(num_ticks_task, max_server_users)
+    while load_balance.ticks_count:
+        users_to_add = file_input.readlines()
+        for num_users in users_to_add:
+            load_balance.do_tick()
+            try:
+                num_users_int = int(num_users)
+                if num_users_int:
+                    load_balance.add_new_users(num_users_int)
+                else:
+                    if load_balance.ticks_count > 1:
+                      load_balance.ticks_count = load_balance.ticks_count - 1
+            except Exception as erro:
+                print('ERROR:{}'.format(erro))
+        load_balance.do_tick()
+        load_balance.ticks_count = load_balance.ticks_count - 1
+    print('tick=', load_balance.cost)
+
 

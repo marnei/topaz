@@ -1,5 +1,7 @@
-"""servers.py: This file describes server functions an classes
+"""servers.py: This file describes server classes
 """
+
+from load_balance import Balance
 
 def get_server_borders(num_ticks, max_users):
     """Tests if max_users borders"""
