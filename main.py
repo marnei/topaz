@@ -30,32 +30,28 @@ if __name__ == '__main__':
         open(sys.argv[2], 'w').close()
         # Cleaning output file
         file_output = open(sys.argv[2], 'w')
-        num_ticks_task = int(file_input.readline())
-        max_server_users = int(file_input.readline())
-        if not load_balance.get_server_borders(num_ticks_task, max_server_users):
-            sys.exit('ERROR: Wrong server file parameter border')
     except Exception as erro:
         sys.exit('ERROR:{}'.format(erro))
 
-    load_balance = load_balance.Balance(num_ticks_task, max_server_users)
-    while load_balance.ticks_count:
-        users_to_add = file_input.readlines()
-        for num_users in users_to_add:
-            try:
-                num_users_int = int(num_users)
-                if num_users_int:
-                    load_balance.add_new_users(num_users_int)
-                else:
-                    if load_balance.ticks_count > 1:
-                        load_balance.ticks_count = load_balance.ticks_count - 1
-                line = load_balance.do_tick()
-                file_output.write(line + '\n')
-            except Exception as erro:
-                print('ERROR:{}'.format(erro))
-        line = load_balance.do_tick()
-        file_output.write(line + '\n')
-        load_balance.ticks_count = load_balance.ticks_count - 1
-    file_output.write(load_balance.get_cost() + '\n')
+    num_ticks_task = file_input.readline()
+    max_server_users = file_input.readline()
+    new_users_list_in = file_input.readlines()
+    new_users_list = []
+    for user in new_users_list_in:
+        new_users_list.append(user.replace('\n', ''))
+
+    l_balance = load_balance.Balance()
+    output_list = l_balance.do_balance(num_ticks_task.replace('\n', ''),
+                                       max_server_users.replace('\n', ''), new_users_list)
+    if output_list:
+        for info in output_list:
+            file_output.write(info + '\n')
+        err = 0
+    else:
+        err = 1
     file_output.close()
     file_input.close()
-    sys.exit('DONE')
+    if err:
+        sys.exit('ERROR')
+    else:
+        sys.exit('DONE')

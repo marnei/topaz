@@ -9,15 +9,6 @@ SERVER_MIN_USERS = 1
 SERVER_TICK_COST = 1
 
 
-def get_server_borders(num_ticks, max_users):
-    """Tests if max_users borders"""
-
-    if num_ticks < SERVER_MIN_TICKS or num_ticks > SERVER_MAX_TICKS \
-            or max_users < SERVER_MIN_USERS or max_users > SERVER_MAX_USERS:
-        return False
-    return True
-
-
 class Balance:
     """
         Do balance in servers.
@@ -26,13 +17,64 @@ class Balance:
 
         Must do load balance allocating users in servers for low cost
     """
-    def __init__(self, ticks_user, max_users):
-        self.ticks_users = ticks_user
-        self.max_users = max_users
+    def __init__(self):
         self.ticks_count = 1
         self.cost = 0
         self.servers_list = []
         self.users_list = []
+        self.output_list = []
+        self.ticks_users = 0
+        self.max_users = 0
+
+    def do_balance(self, ticks_user, max_users, new_users_list):
+        """
+            Do load balane in servers.
+
+            Input: number o tick for user tast,
+            max users per server and a list of
+            nww users per tick
+            Output: A list containing servers users
+            separated by comma and at least the total cost
+        """
+
+        try:
+            max_users = int(max_users)
+            ticks_user = int(ticks_user)
+        except Exception as erro:
+            return None
+        if max_users < SERVER_MIN_USERS or max_users > SERVER_MAX_USERS:
+            return None
+        if ticks_user < SERVER_MIN_TICKS or ticks_user > SERVER_MAX_TICKS:
+            return None
+        self.ticks_users = ticks_user
+        self.max_users = max_users
+        while self.ticks_count:
+            # Must add the number of users in each item list one tick.
+            for num_users in new_users_list:
+                try:
+                    num_users_int = int(num_users)
+                    if num_users_int < 0:
+                        print('ERROR:{}'.format('Invalid value'))
+                        continue
+                    if num_users_int:
+                        self.add_new_users(num_users_int)
+                    else:
+                        if self.ticks_count > 1:
+                            self.ticks_count = self.ticks_count - 1
+                    # do_trick must go to output file
+                    line = self.do_tick()
+                    self.output_list.append(line)
+                except Exception as erro:
+                    print('ERROR:{}'.format('Invalid value '))
+            # do_trick must go to output list
+            new_users_list.clear()
+            line = self.do_tick()
+            self.output_list.append(line)
+            self.ticks_count = self.ticks_count - 1
+        # At the end add cost
+        self.output_list.append(str(self.cost))
+
+        return self.output_list
 
     def add_new_users(self, users):
         """
@@ -123,6 +165,9 @@ class Server:
 
 
 class User:
+    """
+        Users resource control
+    """
 
     def __init__(self, server, task_tick):
         self.server = server
