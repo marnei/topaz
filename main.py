@@ -35,10 +35,7 @@ if __name__ == '__main__':
 
     num_ticks_task = file_input.readline()
     max_server_users = file_input.readline()
-    new_users_list_in = file_input.readlines()
-    new_users_list = []
-    for user in new_users_list_in:
-        new_users_list.append(user.replace('\n', ''))
+    new_users_list = file_input.readlines()
 
     l_balance = load_balance.Balance()
     output_list = l_balance.do_balance(num_ticks_task.replace('\n', ''),

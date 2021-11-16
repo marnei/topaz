@@ -32,10 +32,10 @@ def test_max_user_lower():
 def test_correct_behavior():
     """Test if is working"""
     balance = load_balance.Balance()
-    assert balance.do_balance(4, 2,  ['1', '3', '0', '1', '0', '1']) == ['1', '2,2', '2,2', '2,2,1', '1,2,1', '2', '2', '1', '1', '0', '15']
+    assert balance.do_balance(4, 2,  ['1\n', '3\n', '0\n', '1\n', '0\n', '1\n']) == ['1', '2,2', '2,2', '2,2,1', '1,2,1', '2', '2', '1', '1', '0', '15']
 
 
 def test_user_invalid_on_list():
     """Test and invalid user on user list """
     balance = load_balance.Balance()
-    assert balance.do_balance(4, 2,  ['1', '3', '0', 'invalid', '1', '0', '1']) == ['1', '2,2', '2,2', '2,2,1', '1,2,1', '2', '2', '1', '1', '0', '15']
+    assert balance.do_balance(4, 2,  ['1\n', '3\n', '0\n', 'invalid', '1\n', '0\n', '1\n']) == ['1', '2,2', '2,2', '2,2,1', '1,2,1', '2', '2', '1', '1', '0', '15']
