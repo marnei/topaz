@@ -1,6 +1,7 @@
 """"
     load_balance.py  Responsable for load balance users in servers
 """
+import operator
 
 SERVER_MAX_TICKS = 10
 SERVER_MIN_TICKS = 1
@@ -137,18 +138,8 @@ class Balance:
         else:
             tick_server_info = '0'
         # order list of servers. Best is first one.
-        if self.best_server_list:
-            have_change = 1
-            best_list_len = len(self.best_server_list)
-            if best_list_len > 1:
-                while have_change:
-                    have_change = 0
-                    for index in range(best_list_len-1):
-                        # Best server is the newer...
-                        if self.best_server_list[index].tick_counter > self.best_server_list[index+1].tick_counter:
-                            self.best_server_list[index], self.best_server_list[index+1] = \
-                                self.best_server_list[index+1], self.best_server_list[index]
-                            have_change = 1
+        self.best_server_list.sort(key=operator.attrgetter('tick_counter'))
+
         return tick_server_info
 
     def get_best_server(self):
